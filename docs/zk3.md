@@ -88,7 +88,59 @@ The system UI need to abstract as much as possible to keep the experience smooth
 
 3. Encode Proofs in Lens Posts.
 
+```[json]
+// Example Post with embedded ZK3 Proofs
+{
+  "version": "1.0.0",
+  "metadata_id": "f040fc78-e95a-4cd2-985c-814710266059",
+  "description": "Gm from zk3",
+  "content": "Gm from zk3",
+  "external_url": null,
+  "image": null,
+  "imageMimeType": null,
+  "name": "Posted via LensBot",
+  "attributes": [{
+    "traitType": "type",
+    "value": "post"
+  }, {
+    "traitType": "zk3Circle",
+    "value": "10"
+  }, {
+    "traitType": "zk3SolidityProof",
+    "value": "[\"11491475654249034551530058540758716946337420423545889710810006433558736091864\",\"12898570907677497301248297848750379619460692441293487842658568156420728781290\",\"21627357162854794857457587339872457308771098456569149414571976502678993629342\",\"17832305937506924360348469604409605694461291793148413667617271389859095560554\",\"12933251420328392232033257258551165080972978042614330626104005917439277136300\",\"9611209463992514756510037765382356240454901286524202536373677621686639231780\",\"1047451060104352538535709892628610671538601790562519739476225515482942036099\",\"18725854952849719168344970336626034557154254690824309285533674806957241173503\"]"
+  }, {
+    "traitType": "zk3PublicSignals",
+    "value": "{\"merkleRoot\":\"11187602608035380144215289554399401253419910231528605841340340261574800759544\",\"nullifierHash\":\"6055072881558098280899720266172011124498734208973746106859599210903584919160\",\"signalHash\":\"435484382203993309220294592098126402640301529317374045377596781558513085097\",\"externalNullifier\":\"11187602608035380144215289554399401253419910231528605841340340261574800759544\"}"
+  }],
+  "media": [],
+  "appId": "lens.zk3.io"
+}
+```
+
 4. The proofs should be solidityPacked proofs and will be injected as a bytes array into `ReferenceModuleInitData` and `ReferenceModuleData`.
+
+```[solidity]
+// the struct encoded in `ReferenceModuleData` input
+struct Zk3Metadata {
+    bytes32 signal;
+    uint256 nullifierHash;
+    uint256 circleId;
+    uint256 externalNullifer;
+    uint256[8] proof;
+}
+
+// the struct for `referenceModuleInitData`
+struct Zk3InitData {
+    bool freeMirror;
+    bool freeComment;
+    bytes32 signal;
+    uint256 nullifierHash;
+    uint256 circleId;
+    uint256 externalNullifer;
+    uint256[8] proof;
+}
+
+```
 
 <img src="../assets/zk3/post.png" alt="drawing" width="400" style="display: inline;"/>
 <img src="../assets/zk3/comment.png" alt="drawing" width="400" style="display: inline;"/>
